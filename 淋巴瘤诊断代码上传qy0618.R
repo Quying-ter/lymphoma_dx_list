@@ -3,7 +3,6 @@
 #version 1.0
 #set up the working directory
 setwd("D:/常州一院第一批次淋巴瘤数据")
-#setwd("D:/常州一院第一批次淋巴瘤数据/qy6.15”)
 #set up chinese language environment
 Sys.setlocale(category="LC_ALL",locale="chinese")
 

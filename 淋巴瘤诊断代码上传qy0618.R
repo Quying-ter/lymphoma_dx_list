@@ -21,15 +21,15 @@ basic_info<-fread("患者基本信息.csv",encoding ="UTF-8")
 length(unique(basic_info$cardno))
 #Determine the number of organizations using organization codes/names
 length(unique(basic_info$reg_organcode))
-# nobs = ，npts= ，organcode=
+# nobs =xxx ，npts=xxx ，organcode=xxx
 discharge <- fread("西医病案首页-主表.csv",encoding ="UTF-8")
-#nobs=,npts=，organcode=
+#nobs=xxx,npts=xxx，organcode=xxx
 discharge_operation <- fread("西医病案首页-手术.csv",encoding ="UTF-8")
-#nobs= ,npts=
+#nobs=xxx ,npts=xxx
 death_file<-fread("出院死亡记录表.csv",encoding ="UTF-8")
-#nobs=  ,npts=
+#nobs= xxx ,npts=xxx
 procedure<-fread("有创操作记录.csv",encoding ="UTF-8")
-#nobs= ,npts=
+#nobs=xxx ,npts=xxx
 advice_1<- fread("医嘱-1.csv",encoding ="UTF-8")
 #nobs=23492713,npts=21086
 advice_2<-fread("医嘱-2.csv",encoding ="UTF-8")
@@ -37,7 +37,7 @@ advice_2<-fread("医嘱-2.csv",encoding ="UTF-8")
 advice_3<-fread("医嘱-3.csv",encoding ="UTF-8")
 #nobs= ,npts=
 advice_4<-fread("医嘱-4.csv",encoding ="UTF-8")
-#nobs=
+#nobs=xxx
 inspection_record<-fread("检查记录表.csv",encoding ="UTF-8")
 lab_file_1<-fread("检验结果1.csv",encoding="UTF-8")
 lab_file_2<-fread("检验结果2.csv",encoding="UTF-8")
@@ -54,10 +54,10 @@ lab_file_7_1_6<-fread("检验结果7-1-6.csv",encoding ="UTF-8")
 lab_file_7_2<-fread("检验结果7-2.csv",encoding ="UTF-8")
 lab_file_8<-fread("检验结果-8.csv",encoding ="UTF-8")
 opt_file<-fread("就诊记录表.csv",encoding ="UTF-8")
-#Nobs=   ,npts=   ,organcode=
+#Nobs=xxx,npts=xxx,organcode=xxx
 prescription_file<- fread("西药处方主表.csv",encoding="UTF-8")
 prescription_main<- fread("西药处方从表.csv",encoding="UTF-8")
-#Nobs=
+#Nobs=xxx
 admission_file<- fread("入院记录表.csv",encoding="UTF-8")
 
 
@@ -91,13 +91,13 @@ lymphoma_ipt_dx<-discharge %>%
            grepl("c82|c83|c84|c85|c86|c88",discharge$m_dis_code_9))
 length(unique(lymphoma_ipt_dx$cardno))
 length(unique(lymphoma_ipt_dx$organ_code))
-#Nobs=  ,npts=   ,organcode=
+#Nobs=xxx,npts=xxx,organcode=xxx
 #Produce lymphoma case list with initial eligible diagnosis from discharge files
 lymphoma_ipt_list<-lymphoma_ipt_dx%>%
   mutate(birthyear=year(birthday), in_hp_dt = as.Date(in_hp_dt))%>%
   group_by(cardno)%>%
   summarise_at(vars(sex,birthyear,in_hp_dt), min)
-#Nobs= ,ipt_index_year from  
+#Nobs=xxx ,ipt_index_year from xxx 
 rm(discharge)
 ##extract all lymphoma from opt_file
 lymphoma_opt_dx <- opt_file %>%  
@@ -121,7 +121,7 @@ lymphoma_opt_dx <- opt_file %>%
            grepl("c82|c83|c84|c85|c86|c88",opt_file$dis_code_8))
 length(unique(lymphoma_opt_dx$card_no))
 length(unique(lymphoma_opt_dx$organ_code))
-#Nobs=,npts= ,organcode=
+#Nobs=xxx,npts=xxx,organcode=xxx
 rm(opt_file)
 #Produce lymphoma case list with initial eligible diagnosis from opt_files
 lymphoma_opt_list<-lymphoma_opt_dx%>%
@@ -129,17 +129,17 @@ lymphoma_opt_list<-lymphoma_opt_dx%>%
   rename(cardno=card_no)%>%
   group_by(cardno)%>%
   summarise_at(vars(opt_dt),c(min.max))
-#Nobs=  ,ipt_index_year form 
+#Nobs=xxx,ipt_index_year form xxx
 
 #OPT minimal and maximal dates to be >=30days apart
 lymphoma_opt_list$opt_dx_lag<-as.numeric(difftime(lymphoma_opt_list$fn2,lymphoma_opt_list$fn1,units = "days"))
-#Nobs= 
+#Nobs=xxx 
 #Restrict to 30 days aprt
 lymphoma_opt_list<-lymphoma_opt_list[lymphoma_opt_list$opt_dx_1ag>=30,]
-#Nobs=
+#Nobs=xxx
 #combine diagnosislists from opt and ipt, then get the unique patient respective dates
 id_list<-unique(rbind(lymphoma_ipt_list[,1],lymphoma_opt_list[,1]))
-#Nobs=
+#Nobs=xxx
 
 #Merge demographic information from ipt_list
 id_list_ipt_info<-id_list%>%
@@ -158,7 +158,7 @@ lymphoma_basic_demo<-basic_info%>%
   summarise_at(vars(sex,birthyear),min)%>%
   rename(sex_basic_info=sex)%>%
   rename(birthyear_basic_info=birthyear)
-#Nobs=
+#Nobs=xxx
 #Merge back basic demographic info to patient id list
 id_list_ipt_opt_basic_info<-id_list_ipt_opt_info%>%
   left_join(lymphoma_basic_demo,by="cardno")

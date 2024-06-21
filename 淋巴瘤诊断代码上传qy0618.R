@@ -1,5 +1,5 @@
 #Data loading
-#Prepared by ou Ying validate by zhou jifang on 2024.6.18
+#Prepared by Qu Ying validate by zhou jifang on 2024.6.18
 #version 1.0
 #set up the working directory
 setwd("D:/常州一院第一批次淋巴瘤数据")
@@ -22,23 +22,23 @@ basic_info<-fread("患者基本信息.csv",encoding ="UTF-8")
 length(unique(basic_info$cardno))
 #Determine the number of organizations using organization codes/names
 length(unique(basic_info$reg_organcode))
-# nobs =12425173，npts=76157，organcode=4389
+# nobs = ，npts= ，organcode=
 discharge <- fread("西医病案首页-主表.csv",encoding ="UTF-8")
-#nobs=857689,npts=62228，organcode=705
+#nobs=,npts=，organcode=
 discharge_operation <- fread("西医病案首页-手术.csv",encoding ="UTF-8")
-#nobs=857689,npts=62228
+#nobs= ,npts=
 death_file<-fread("出院死亡记录表.csv",encoding ="UTF-8")
-#nobs=710846,npts=65741
+#nobs=  ,npts=
 procedure<-fread("有创操作记录.csv",encoding ="UTF-8")
-#nobs=3264,npts=485
+#nobs= ,npts=
 advice_1<- fread("医嘱-1.csv",encoding ="UTF-8")
 #nobs=23492713,npts=21086
 advice_2<-fread("医嘱-2.csv",encoding ="UTF-8")
 #nobs=26087083.npts=37141
 advice_3<-fread("医嘱-3.csv",encoding ="UTF-8")
-#nobs=13924474,npts=26542
+#nobs= ,npts=
 advice_4<-fread("医嘱-4.csv",encoding ="UTF-8")
-#nobs=23001371
+#nobs=
 inspection_record<-fread("检查记录表.csv",encoding ="UTF-8")
 lab_file_1<-fread("检验结果1.csv",encoding="UTF-8")
 lab_file_2<-fread("检验结果2.csv",encoding="UTF-8")
@@ -122,7 +122,7 @@ lymphoma_opt_dx <- opt_file %>%
            grepl("c82|c83|c84|c85|c86|c88",opt_file$dis_code_8))
 length(unique(lymphoma_opt_dx$card_no))
 length(unique(lymphoma_opt_dx$organ_code))
-#nobs=776982,npts=65706 ,organcode=1205
+#nobs=,npts= ,organcode=
 rm(opt_file)
 #Produce lymphoma case list with initial eligible diagnosis from opt_files
 lymphoma_opt_list<-lymphoma_opt_dx%>%
@@ -130,7 +130,7 @@ lymphoma_opt_list<-lymphoma_opt_dx%>%
   rename(cardno=card_no)%>%
   group_by(cardno)%>%
   summarise_at(vars(opt_dt),c(min.max))
-#obs=657061,ipt_index_year form 2017-2024
+#obs=  ,ipt_index_year form 
 
 #OPT minimal and maximal dates to be >=30days apart
 lymphoma_opt_list$opt_dx_lag<-as.numeric(difftime(lymphoma_opt_list$fn2,lymphoma_opt_list$fn1,units = "days"))
